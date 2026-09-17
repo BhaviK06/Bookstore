@@ -13,9 +13,6 @@
     <h1>Add book</h1>
 <div>
   <form th:object="${book}" th:action="@{/save}" method="post">
-      <label for="id" class="form-label">ID</label>
-      <input type="text" id="id" th:field="*{id}" class="form-control" />
-
       <label for="title" class="form-label">Title</label>
       <input type="text" id="title" th:field="*{title}" class="form-control" />
 
