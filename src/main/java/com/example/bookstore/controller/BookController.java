@@ -2,24 +2,25 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.BookRepository;
+import com.example.bookstore.model.CategoryRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class BookController {
     @Autowired
     private BookRepository bookrepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @RequestMapping("/booklist")
     public String listBook(Model model) {
@@ -34,6 +35,7 @@ public class BookController {
     @RequestMapping(value = "/add")
     public String addStudent(Model model) {
         model.addAttribute("book", new Book());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addbook";
     }
 
@@ -42,6 +44,7 @@ public class BookController {
         Book book = bookrepository.findById(bookId)
                 .orElseThrow(() -> new NoSuchElementException("Book not found: " + bookId));
         model.addAttribute("book", book);
+        model.addAttribute("categories", categoryRepository.findAll());
         return "editbook";
     }
 

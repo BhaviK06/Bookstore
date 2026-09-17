@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.BookRepository;
+import com.example.bookstore.model.Category;
+import com.example.bookstore.model.CategoryRepository;
 
 @SpringBootApplication
 public class BookstoreApplication {
@@ -16,30 +18,40 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-public CommandLineRunner initializedatabase(BookRepository bookRepository) {
+public CommandLineRunner initializedatabase(BookRepository bookRepository, CategoryRepository categoryRepository) {
 	return (args) -> {
+		Category fiction = categoryRepository.save(new Category("Fiction"));
+		Category selfHelp = categoryRepository.save(new Category("Self-help"));
+		Category fantasy = categoryRepository.save(new Category("Fantasy"));
+
 		Book book1 = new Book();
 		book1.setTitle("The Odyssey");
+		book1.setCategory(fiction);
 		bookRepository.save(book1);
 
 		Book book2 = new Book();
 		book2.setTitle("Atomic Habits");
+		book2.setCategory(selfHelp);
 		bookRepository.save(book2);
 
 		Book book3 = new Book();
 		book3.setTitle("The Alchemist");
+		book3.setCategory(fiction);
 		bookRepository.save(book3);
 
 		Book book4 = new Book();
 		book4.setTitle("The Midnight Library");
+		book4.setCategory(fiction);
 		bookRepository.save(book4);
 
 		Book book5 = new Book();
 		book5.setTitle("The Psychology of Money");
+		book5.setCategory(selfHelp);
 		bookRepository.save(book5);
 
 		Book book6 = new Book();
 		book6.setTitle("Harry Potter and the Philosopher's Stone");
+		book6.setCategory(fantasy);
 		bookRepository.save(book6);
 	};
 }
