@@ -29,12 +29,12 @@
         <label for="price" class="form-label">Price</label>
         <input type="text" id="price" th:field="*{price}" class="form-control" />
 
-        <label for="category" class="form-label">Category</label>
-        <select id="category" th:field="*{category}" class="form-control">
-            <option value="">Select a category</option>
+        <label for="categoryId" class="form-label">Category</label>
+        <select id="categoryId" name="categoryId" class="form-control" required>
             <option th:each="category : ${categories}"
                     th:value="${category.id}"
-                    th:text="${category.name}"></option>
+                    th:text="${category.name}"
+                    th:selected="${book.category != null and book.category.id == category.id}"></option>
         </select>
 
         <input type="submit" value="Save" class="btn btn-success" />

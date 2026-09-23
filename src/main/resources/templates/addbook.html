@@ -28,8 +28,8 @@
       <label for="price" class="form-label">Price</label>
       <input type="text" id="price" th:field="*{price}" class="form-control" />
 
-      <label for="category" class="form-label">Category</label>
-      <select id="category" th:field="*{category}" class="form-control">
+      <label for="categoryId" class="form-label">Category</label>
+      <select id="categoryId" name="categoryId" class="form-control" required>
           <option value="">Select a category</option>
           <option th:each="category : ${categories}"
                   th:value="${category.id}"
