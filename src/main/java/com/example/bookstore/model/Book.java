@@ -90,11 +90,11 @@ public class Book {
         this.category = category;
     }
 
-    public void setMovieName(String movieName) {
-        this.title = movieName;
+    public void setBookName(String bookName) {
+        this.title = bookName;
     }
 
-    public String getMovieName() {
+    public String getBookName() {
         return this.title;
     }
 }
