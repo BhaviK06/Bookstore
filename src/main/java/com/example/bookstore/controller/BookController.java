@@ -5,10 +5,12 @@ import com.example.bookstore.model.BookRepository;
 import com.example.bookstore.model.Category;
 import com.example.bookstore.model.CategoryRepository;
 
+import java.util.stream.StreamSupport;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class BookController {
@@ -29,10 +32,23 @@ public class BookController {
     public String listBook(Model model) {
 
         List<Book> books = (List<Book>) bookrepository.findAll();
-        System.out.println(books);
         model.addAttribute("books", books);
         return "booklist";
 
+    }
+
+    @GetMapping("/api/books")
+    @ResponseBody
+    public List<Book> getBooks() {
+        return StreamSupport.stream(bookrepository.findAll().spliterator(), false).toList();
+    }
+
+    @GetMapping("/api/books/{id}")
+    @ResponseBody
+    public ResponseEntity<Book> getBookById(@PathVariable("id") Long bookId) {
+        return bookrepository.findById(bookId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @RequestMapping(value = "/add")

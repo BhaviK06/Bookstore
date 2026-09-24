@@ -4,9 +4,7 @@
 <head>
     <title>Edit book</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet"
-          href="/css/bootstrap.min.css"
-          th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" />
 </head>
 
 <body>
@@ -31,10 +29,8 @@
 
         <label for="categoryId" class="form-label">Category</label>
         <select id="categoryId" name="categoryId" class="form-control" required>
-            <option th:each="category : ${categories}"
-                    th:value="${category.id}"
-                    th:text="${category.name}"
-                    th:selected="${book.category != null and book.category.id == category.id}"></option>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
+                th:selected="${book.category != null and book.category.id == category.id}"></option>
         </select>
 
         <input type="submit" value="Save" class="btn btn-success" />
