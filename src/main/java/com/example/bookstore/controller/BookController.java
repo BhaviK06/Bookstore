@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,13 +26,19 @@ public class BookController {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @RequestMapping("/booklist")
-    public String listBook(Model model) {
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
+    @RequestMapping("/booklist")
+    public String listBook(Model model, Authentication authentication) {
         List<Book> books = (List<Book>) bookrepository.findAll();
         model.addAttribute("books", books);
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("isAdmin", authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN")));
         return "booklist";
-
     }
 
     @RequestMapping(value = "/add")
@@ -58,9 +66,9 @@ public class BookController {
         return "redirect:/booklist";
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-public String deleteBook(@PathVariable("id") Long bookId, Model model) {
-bookrepository.deleteById(bookId);
-return "redirect:../booklist";
-}
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+    public String deleteBook(@PathVariable("id") Long bookId) {
+        bookrepository.deleteById(bookId);
+        return "redirect:/booklist";
+    }
 }

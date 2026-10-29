@@ -4,7 +4,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.bookstore.model.AppUser;
+import com.example.bookstore.model.AppUserRepository;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.BookRepository;
 import com.example.bookstore.model.Category;
@@ -18,9 +21,18 @@ public class BookstoreApplication {
 	}
 
 	@Bean
-public CommandLineRunner initializedatabase(BookRepository bookRepository, CategoryRepository categoryRepository) {
-	return (args) -> {
-		Category fiction = getOrCreateCategory(categoryRepository, "Fiction");
+public CommandLineRunner initializedatabase(
+		BookRepository bookRepository,
+		CategoryRepository categoryRepository,
+		AppUserRepository appUserRepository,
+		PasswordEncoder passwordEncoder) {
+return (args) -> {
+	createUserIfMissing(appUserRepository, passwordEncoder,
+			"user", "user123", "user@bookstore.local", "USER");
+	createUserIfMissing(appUserRepository, passwordEncoder,
+			"admin", "admin123", "admin@bookstore.local", "ADMIN");
+
+	Category fiction = getOrCreateCategory(categoryRepository, "Fiction");
 		Category nonFiction = getOrCreateCategory(categoryRepository, "Non-fiction");
 		Category fantasy = getOrCreateCategory(categoryRepository, "Fantasy");
 
@@ -57,6 +69,19 @@ public CommandLineRunner initializedatabase(BookRepository bookRepository, Categ
 		}
 	};
 }
+
+	private void createUserIfMissing(
+			AppUserRepository appUserRepository,
+			PasswordEncoder passwordEncoder,
+			String username,
+			String rawPassword,
+			String email,
+			String role) {
+		if (appUserRepository.findByUsername(username).isEmpty()) {
+			AppUser user = new AppUser(username, passwordEncoder.encode(rawPassword), email, role);
+			appUserRepository.save(user);
+		}
+	}
 
 	private Category getOrCreateCategory(CategoryRepository categoryRepository, String name) {
 		Category category = categoryRepository.findFirstByName(name);
